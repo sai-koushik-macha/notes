@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# opens existing notes or creates new notes
+
+function new_file_create {
+  echo -n "notes name : "
+  read file_name
+  file_extention=".md"
+  [ "$file_name" == "" ] && exit
+  file_full_name="$file_name$file_extention"
+  touch "$file_full_name"
+}
+
+
+function open_notes {
+  file_name=$(fzf)
+  [ "$file_name" != "" ] && nvim "$file_name"
+}
+
+function option_for_new_notes {
+  [ ! -d ~/notes ] && [ "$1" == "Y" ] &&  mkdir ~/notes
+  cd ~/notes 2>/dev/null || exit
+  [ "$1" == "Y" ] &&  new_file_create
+  open_notes
+  exit
+}
+
+
+[ ! -d ~/notes ] && read -rp "No notes is available. Do you like to make new one? [Y/n] " option
+[ -d ~/notes ] && read -rp "Do you like to make new one? [Y/n] " option
+[ "$option" != "n" ] && [ "$option" != "N" ] && option="Y"
+option_for_new_notes "$option"
