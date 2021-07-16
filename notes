@@ -4,6 +4,7 @@
 
 function new_file_create {
   echo -n "notes name : "
+  # shellcheck disable=SC2162
   read file_name
   file_extention=".md"
   [ "$file_name" == "" ] && exit
@@ -13,7 +14,8 @@ function new_file_create {
 
 
 function open_notes {
-  file_name=$(fzf)
+  # shellcheck disable=SC2012
+  file_name=$(fzf --margin 5% --padding 1% --border --preview='cat {}')
   [ "$file_name" != "" ] && nvim "$file_name"
 }
 
